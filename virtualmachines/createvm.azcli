@@ -1,0 +1,87 @@
+# simple Windows VM
+az vm create \
+    --resource-group $RGROUP \
+    --name NW-APP01 \
+    --size Standard_DS1_v2 \
+    --vnet-name NorthwindInternal \
+    --subnet NorthwindInternal1 \
+    --image Win2016Datacenter \
+    --admin-username admin123 \
+    --no-wait \
+    --admin-password <password>
+
+# Simple Linux VM
+
+az vm create \
+    --resource-group $RGROUP \
+    --name NW-RHEL01 \
+    --size Standard_DS1_v2 \
+    --image RedHat:RHEL:7-RAW:latest \
+    --authentication-type ssh \
+    --generate-ssh-keys \
+    --vnet-name NorthwindInternal \
+    --subnet NorthwindInternal1
+
+
+
+# sample application server
+
+wget -N https://raw.githubusercontent.com/MicrosoftDocs/mslearn-secure-and-isolate-with-nsg-and-service-endpoints/master/cloud-init.yml && \
+az vm create \
+    --resource-group $rg \
+    --name AppServer \
+    --vnet-name ERP-servers \
+    --subnet Applications \
+    --nsg ERP-SERVERS-NSG \
+    --image UbuntuLTS \
+    --size Standard_DS1_v2 \
+    --admin-username azureuser \
+    --custom-data cloud-init.yml \
+    --no-wait \
+    --admin-password <password>
+
+# sample database server
+
+az vm create \
+    --resource-group $rg \
+    --name DataServer \
+    --vnet-name ERP-servers \
+    --subnet Databases \
+    --nsg ERP-SERVERS-NSG \
+    --size Standard_DS1_v2 \
+    --image UbuntuLTS \
+    --admin-username azureuser \
+    --custom-data cloud-init.yml \
+    --admin-password <password>
+
+# sample azcli queries
+
+az vm list \
+    --resource-group $rg \
+    --show-details \
+    --query "[*].{Name:name, Provisioned:provisioningState, Power:powerState}" \
+    --output table
+
+az group list --query '[0].name' --output tsv
+az group list --query '[0].location' --output tsv
+
+## Check VM's which are running state
+az vm list \
+    --resource-group $rg \
+    --show-details \
+    --query "[*].{Name:name, Provisioned:provisioningState, Power:powerState}" \
+    --output table
+# sample out
+Name        Provisioned    Power
+----------  -------------  ----------
+AppServer   Succeeded      VM running
+DataServer  Succeeded      VM running
+
+## Fetch the IPaddress of running VMs
+az vm list \
+    --resource-group $rg \
+    --show-details \
+    --query "[*].{Name:name, PrivateIP:privateIps, PublicIP:publicIps}" \
+    --output table
+
+

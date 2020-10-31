@@ -1,0 +1,31 @@
+
+# create a resource group
+rg=<resource group name>
+az group create --name $rg --location <location>
+
+## OR ##
+
+RGROUP=$(az group create --name vmbackups --location westus2 --output tsv --query name)
+
+# Create VNET with name "ERP-servers" and subnet with name "Applications"
+
+az network vnet create \
+    --resource-group $rg \
+    --name ERP-servers \
+    --address-prefix 10.0.0.0/16 \
+    --subnet-name Applications \
+    --subnet-prefix 10.0.0.0/24
+
+# create an addtional subnet under existing VNET
+
+az network vnet subnet create \
+    --resource-group $rg \
+    --vnet-name ERP-servers \
+    --address-prefix 10.0.1.0/24 \
+    --name Databases
+
+# Create a NSG
+
+az network nsg create \
+    --resource-group $rg \
+    --name ERP-SERVERS-NSG

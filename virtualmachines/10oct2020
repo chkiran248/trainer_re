@@ -1,0 +1,31 @@
+# Section 1
+
+New-AzResourceGroup -Name 10Oct2020 -Location centralindia
+$cred = Get-Credential -Message "Enter a username and password for the virtual machine."
+
+# Section 2
+
+$vmParams = @{
+  ResourceGroupName = '10Oct2020'
+  Name = 'server'
+  Location = 'centralindia'
+  ImageName = 'Win2016Datacenter'
+  PublicIpAddressName = 'tutorialPublicIp'
+  Credential = $cred
+  OpenPorts = 3389
+}
+$newVM1 = New-AzVM @vmParams -AsJob
+
+# Section 3
+
+$vm2Params = @{
+  ResourceGroupName = '10Oct2020'
+  Name = 'client'
+  ImageName = 'Win2016Datacenter'
+  VirtualNetworkName = 'server'
+  SubnetName = 'server'
+  PublicIpAddressName = 'tutorialPublicIp2'
+  Credential = $cred
+  OpenPorts = 3389
+}
+$newVM2 = New-AzVM @vm2Params
