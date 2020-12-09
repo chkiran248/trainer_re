@@ -1,7 +1,7 @@
 ARM Graphical Visualizer
 Enables you to upload your Resource Manager template and graphically see how your resources relate to one another.
 You can inspect this visualization to verify that the deployment is set up correctly and meets your requirements.
-http://armviz.io/designer
+http://armviz.io
 
 
 ARM Quick Start Templates

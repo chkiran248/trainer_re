@@ -1,0 +1,6 @@
+1. Replace Keypair(mykey.pem)
+2. chmod 600 mykey.pem
+3. make sure ansible is installed
+4. update hosts file
+
+https://github.com/shan5a6/kubernetes-installation
